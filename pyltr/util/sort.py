@@ -13,7 +13,7 @@ def get_sorted_y_positions(y, y_pred, check=True):
         y = sklearn.utils.validation.column_or_1d(y)
         y_pred = sklearn.utils.validation.column_or_1d(y_pred)
         sklearn.utils.validation.check_consistent_length(y, y_pred)
-    return np.lexsort((y, -y_pred))
+    return np.array(np.lexsort((y, -y_pred)))
 
 
 def get_sorted_y(y, y_pred, check=True):
@@ -33,4 +33,4 @@ def get_sorted_y(y, y_pred, check=True):
         Ties are broken in ascending order of `y`.
 
     """
-    return y[get_sorted_y_positions(y, y_pred, check=check)]
+    return [y[i] for i in get_sorted_y_positions(y, y_pred, check=check)]
