@@ -34,3 +34,40 @@ class Precision(Metric):
 
     def max_k(self):
         return self.k
+
+class PrecisionUpper(Precision):
+    def __init__(self, k=10, cutoff=0.5):
+        """
+        target >= cutoff means relevant, not relevant otherwise
+        """
+        if k < 0:
+            raise ValueError('k must be positive')
+        super(PrecisionUpper, self).__init__(k, cutoff)
+
+    def evaluate(self, qid, targets):
+        upper_targets = []
+        for t in targets:
+            if t is None:
+                upper_targets.append(self.cutoff + 1.)
+            else:
+                upper_targets.append(t)
+        return super(PrecisionUpper, self).evaluate(qid, upper_targets)
+
+class PrecisionLower(Precision):
+    def __init__(self, k=10, cutoff=0.5):
+        """
+        target >= cutoff means relevant, not relevant otherwise
+        """
+        if k < 0:
+            raise ValueError('k must be positive')
+        super(PrecisionLower, self).__init__(k, cutoff)
+
+    def evaluate(self, qid, targets):
+        upper_targets = []
+        for t in targets:
+            if t is None:
+                upper_targets.append(self.cutoff - 1.)
+            else:
+                upper_targets.append(t)
+        return super(PrecisionLower, self).evaluate(qid, upper_targets)
+
